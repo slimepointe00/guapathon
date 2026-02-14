@@ -10,22 +10,31 @@
         background: black;
         overflow: hidden;
         font-family: Impact, sans-serif;
+        filter: blur(8px); /* initial blur */
     }
 
-    .textA, .textB {
+    .textA, .textB, .clickText {
         position: absolute;
-        color: red;
         font-weight: bold;
         white-space: nowrap;
         animation: flash 0.15s infinite alternate;
+        cursor: pointer;
     }
 
     .textA {
+        color: red;
         animation: flash 0.15s infinite alternate, moveRight 3s linear infinite;
     }
 
     .textB {
+        color: red;
         animation: flash 0.15s infinite alternate, moveLeft 3s linear infinite;
+    }
+
+    .clickText {
+        color: white;
+        font-size: 12px;
+        animation: flash 0.15s infinite alternate, randomMove 2s linear infinite;
     }
 
     @keyframes flash {
@@ -42,29 +51,46 @@
         from { transform: translateX(100vw); }
         to { transform: translateX(-100vw); }
     }
+
+    @keyframes randomMove {
+        0% { transform: translate(0,0); }
+        25% { transform: translate(20px, -20px); }
+        50% { transform: translate(-20px, 20px); }
+        75% { transform: translate(15px, -15px); }
+        100% { transform: translate(0,0); }
+    }
 </style>
 </head>
 <body>
 
-<!-- Local MP3 file, rename your file to music.mp3 -->
-<audio id="bgMusic" loop autoplay>
+<audio id="bgMusic" loop>
     <source src="music.mp3" type="audio/mpeg">
 </audio>
 
 <script>
+let chaosStarted = false;
+
 function createText(type) {
     const text = document.createElement("div");
 
     if (type === "A") {
         text.className = "textA";
         text.innerText = "I AM GOING PSYKOTIC";
-    } else {
+    } else if (type === "B") {
         text.className = "textB";
         text.innerText = "SLIMEPOINTE49";
+    } else {
+        text.className = "clickText";
+        text.innerText = "CLICK";
+
+        // On first click, start music and chaos
+        text.addEventListener("click", startChaos);
     }
 
     text.style.top = Math.random() * window.innerHeight + "px";
-    text.style.fontSize = (30 + Math.random() * 70) + "px";
+    text.style.left = Math.random() * window.innerWidth + "px";
+
+    if(type !== "click") text.style.fontSize = (30 + Math.random() * 70) + "px";
 
     document.body.appendChild(text);
 
@@ -73,14 +99,23 @@ function createText(type) {
     }, 3000);
 }
 
-// Start text spam immediately
-setInterval(() => createText("A"), 120);
-setInterval(() => createText("B"), 120);
+function startChaos() {
+    if(chaosStarted) return;
+    chaosStarted = true;
 
-// Play music (some browsers may still require a user gesture for autoplay)
-document.getElementById("bgMusic").play().catch(() => {
-    console.log("Autoplay blocked, click anywhere to start music.");
-});
+    // Remove blur
+    document.body.style.filter = "none";
+
+    // Play music
+    document.getElementById("bgMusic").play();
+
+    // Start red chaos texts
+    setInterval(() => createText("A"), 120);
+    setInterval(() => createText("B"), 120);
+}
+
+// Spawn tiny CLICK texts until first click
+setInterval(() => createText("click"), 80);
 </script>
 
 </body>
