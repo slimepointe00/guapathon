@@ -79,7 +79,7 @@
 </div>
 
 <audio id="bgMusic" loop>
-    <source src="https://drive.google.com/uc?export=download&id=1OsqgIKqcUGsYtfKV2Om7ol8W6GbhgPTt" type="audio/mpeg">
+    <source src="music.mp3" type="audio/mpeg">
 </audio>
 
 <script>
@@ -92,9 +92,8 @@ function startChaos() {
     // Remove blur overlay
     document.getElementById("overlay").style.display = "none";
 
-    // Play Google Drive audio
-    const music = document.getElementById("bgMusic");
-    music.play();
+    // Play local audio
+    document.getElementById("bgMusic").play();
 
     // Start text spam
     setInterval(() => createText("A"), 120);
