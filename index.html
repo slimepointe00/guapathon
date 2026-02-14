@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Psykotic Mode</title>
+
+<style>
+    body {
+        margin: 0;
+        background: black;
+        overflow: hidden;
+        font-family: Impact, sans-serif;
+    }
+
+    /* Blur overlay */
+    .overlay {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        backdrop-filter: blur(15px);
+        background: rgba(0,0,0,0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10;
+    }
+
+    .startButton {
+        padding: 25px 50px;
+        font-size: 40px;
+        color: red;
+        background: black;
+        border: 4px solid red;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .startButton:hover {
+        background: red;
+        color: black;
+    }
+
+    .textA, .textB {
+        position: absolute;
+        color: red;
+        font-weight: bold;
+        white-space: nowrap;
+        animation: flash 0.15s infinite alternate;
+    }
+
+    .textA {
+        animation: flash 0.15s infinite alternate, moveRight 3s linear infinite;
+    }
+
+    .textB {
+        animation: flash 0.15s infinite alternate, moveLeft 3s linear infinite;
+    }
+
+    @keyframes flash {
+        from { opacity: 1; }
+        to { opacity: 0.2; }
+    }
+
+    @keyframes moveRight {
+        from { transform: translateX(-100vw); }
+        to { transform: translateX(100vw); }
+    }
+
+    @keyframes moveLeft {
+        from { transform: translateX(100vw); }
+        to { transform: translateX(-100vw); }
+    }
+</style>
+</head>
+<body>
+
+<div class="overlay" id="overlay">
+    <button class="startButton" onclick="startChaos()">CLICK TO ENTER PSYKOTIC MODE</button>
+</div>
+
+<audio id="bgMusic" loop>
+    <source src="https://files.catbox.moe/erppoa.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+let chaosStarted = false;
+
+function startChaos() {
+    if (chaosStarted) return;
+    chaosStarted = true;
+
+    // Remove blur
+    document.getElementById("overlay").style.display = "none";
+
+    // Play music
+    document.getElementById("bgMusic").play();
+
+    // Start text spam
+    setInterval(() => createText("A"), 120);
+    setInterval(() => createText("B"), 120);
+}
+
+function createText(type) {
+    const text = document.createElement("div");
+
+    if (type === "A") {
+        text.className = "textA";
+        text.innerText = "I AM GOING PSYKOTIC";
+    } else {
+        text.className = "textB";
+        text.innerText = "SLIMEPOINTE49";
+    }
+
+    text.style.top = Math.random() * window.innerHeight + "px";
+    text.style.fontSize = (30 + Math.random() * 70) + "px";
+
+    document.body.appendChild(text);
+
+    setTimeout(() => {
+        text.remove();
+    }, 3000);
+}
+</script>
+
+</body>
+</html>
